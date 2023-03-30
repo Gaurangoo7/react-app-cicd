@@ -37,7 +37,7 @@ pipeline {
                 script {
                     docker run  -p 3000:3000 -d gaurang1/sample-react-app:latest
                     
-                    }
+                    
                 }
             }
         }
