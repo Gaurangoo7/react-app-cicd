@@ -13,26 +13,34 @@ pipeline {
         stage('Build') {
             steps {
                 sh 'npm install'
-                sh 'npm run build'
+                // sh 'npm run build'
             }
         }
         stage('Test') {
             steps {
                 // sh 'npm run test'
-                echo 'run tests here'
+                echo "Test"
+
             }
         }
         stage('Build Image') {
             steps {
-                sh 'npm run  build'
-            
+                withCredentials([usernamePassword(credentialsId: '1ec90535-d958-4a41-aa96-8719bd392206', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
+                    sh 'docker build -t gaurang1/sample-react-app .'
+                    sh "echo $PASS | docker login -u $USER --password-stdin"
+                    sh 'docker push gaurang1/sample-react-app'
+                }
             }
         }
         stage ('Deploy') {
             steps {
-                echo 'Deploying the application'
-                
+                script {
+                    def dockerCmd = 'docker run  -p 3000:3000 -d gaurang1/sample-react-app:latest'
+                    sshagent(['ec2-server-key']) {
+                        sh "ssh -o StrictHostKeyChecking=no ubuntu@34.201.101.177 ${dockerCmd}"
+                    }
+                }
             }
         }
     }
-}                                                                                                                                                                                                        
+}
