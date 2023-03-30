@@ -35,7 +35,7 @@ pipeline {
         stage ('Deploy') {
             steps {
                 script {
-                    def dockerCmd = 'docker run  -p 3000:3000 -d gaurang1/sample-react-app:latest'
+                    docker run  -p 3000:3000 -d gaurang1/sample-react-app:latest
                     
                     }
                 }
