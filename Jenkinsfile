@@ -34,12 +34,7 @@ pipeline {
         }
         stage ('Deploy') {
             steps {
-                script {
-                    def dockerCmd = 'docker run  -i -t -p 3000:3000 -d gaurang1/sample-react-app:latest'
-                    sshagent(['ec2-server-key']) {
-                        sh "ssh -o StrictHostKeyChecking=no ubuntu@34.201.101.177 ${dockerCmd}"
-                    }
-                }
+                sh 'docker run -d -i -t --name react-container-app -p 3000:3000 sample-react-app:latest'
             }
         }
     }
